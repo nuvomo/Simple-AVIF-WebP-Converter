@@ -1,0 +1,144 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Simple AVIF & WebP Converter\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-17 01:34+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.8.0; wp-6.8.1; php-8.2.27\n"
+"X-Domain: simple-avif-webp-converter"
+
+#: simple-avif-webp-converter.php:66
+msgid "Automatische Konvertierung"
+msgstr ""
+
+#: simple-avif-webp-converter.php:70
+msgid "AVIF Qualität (Imagick)"
+msgstr ""
+
+#: simple-avif-webp-converter.php:33
+msgid "AVIF/WebP Converter"
+msgstr ""
+
+#: simple-avif-webp-converter.php:76
+msgid "Debug-Log"
+msgstr ""
+
+#: simple-avif-webp-converter.php:67
+msgid "Debug-Modus"
+msgstr ""
+
+#: simple-avif-webp-converter.php:67
+msgid "Detailliertes Log bei der Massen-Konvertierung anzeigen."
+msgstr ""
+
+#: simple-avif-webp-converter.php:65 simple-avif-webp-converter.php:90
+msgid "Einstellungen"
+msgstr ""
+
+#: simple-avif-webp-converter.php:54
+msgid "Einstellungen gespeichert!"
+msgstr ""
+
+#: simple-avif-webp-converter.php:71
+msgid "Einstellungen speichern"
+msgstr ""
+
+#. Author of the plugin
+msgid "Frank Lewandowski"
+msgstr ""
+
+#. URI of the plugin
+#. Author URI of the plugin
+msgid "https://franklewandowski.de"
+msgstr ""
+
+#: simple-avif-webp-converter.php:68
+msgid "Imagick (empfohlen)"
+msgstr ""
+
+#: simple-avif-webp-converter.php:72
+msgid "Klicken Sie hier, um Ihre Mediathek zu analysieren."
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"Konvertiert hochgeladene Bilder in AVIF und WebP und liefert sie mit einem "
+"Picture-Tag aus. Unterstützt Imagick und GD."
+msgstr ""
+
+#: simple-avif-webp-converter.php:73
+msgid "Konvertierung starten"
+msgstr ""
+
+#: simple-avif-webp-converter.php:68
+msgid "Konvertierungs-Bibliothek"
+msgstr ""
+
+#: simple-avif-webp-converter.php:72
+msgid "Massen-Konvertierung"
+msgstr ""
+
+#: simple-avif-webp-converter.php:72
+msgid "Mediathek scannen"
+msgstr ""
+
+#: simple-avif-webp-converter.php:22
+msgid "Metadaten nicht gefunden."
+msgstr ""
+
+#: simple-avif-webp-converter.php:66
+msgid "Neue Bilder beim Upload automatisch konvertieren."
+msgstr ""
+
+#: simple-avif-webp-converter.php:75
+msgid "Nicht verfügbar"
+msgstr ""
+
+#: simple-avif-webp-converter.php:72
+msgid "Schritt 1:"
+msgstr ""
+
+#: simple-avif-webp-converter.php:73
+msgid "Schritt 2: Status"
+msgstr ""
+
+#: simple-avif-webp-converter.php:73
+msgid "Schritt 3: Konvertieren"
+msgstr ""
+
+#: simple-avif-webp-converter.php:75
+msgid "Server-Status"
+msgstr ""
+
+#: simple-avif-webp-converter.php:44
+msgid "Sie haben keine Berechtigung, diese Einstellungen zu speichern."
+msgstr ""
+
+#. Name of the plugin
+msgid "Simple AVIF & WebP Converter"
+msgstr ""
+
+#: simple-avif-webp-converter.php:32
+msgid "Simple AVIF/WebP Converter"
+msgstr ""
+
+#: simple-avif-webp-converter.php:73
+msgid "Starten Sie die Konvertierung für alle noch nicht optimierten Bilder."
+msgstr ""
+
+#: simple-avif-webp-converter.php:75
+msgid "Verfügbar"
+msgstr ""
+
+#: simple-avif-webp-converter.php:69
+msgid "WebP Qualität"
+msgstr ""

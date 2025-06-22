@@ -1,0 +1,42 @@
+/* General Layout */
+.sawc-wrap { display: flex; flex-wrap: wrap; gap: 20px; }
+.sawc-main-content { flex: 1; min-width: 400px; }
+.sawc-sidebar { flex-basis: 350px; }
+.sawc-card { background: #fff; border: 1px solid #c3c4c7; box-shadow: 0 1px 1px rgba(0,0,0,.04); padding: 1px 20px 20px; margin-top: 20px; }
+.postbox { margin-top: 20px; }
+.postbox .inside { padding: 12px; margin: 0; }
+.postbox h2.hndle { padding: 8px 12px; font-size: 14px; }
+
+/* Progress Bars */
+.sawc-progress-bar-container { background: #eee; border: 1px solid #ccc; padding: 2px; margin-top:5px; max-width: 500px; }
+.sawc-progress-bar { background: #0073aa; width: 0%; height: 24px; text-align: center; color: white; line-height: 24px; transition: width 0.5s; }
+
+/* Status & Donut Charts */
+.sawc-status-container { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px; }
+.sawc-donut-chart-wrapper { text-align: center; }
+.sawc-donut-chart { position: relative; width: 100px; height: 100px; margin: 0 auto; }
+.sawc-donut-chart svg { transform: rotate(-90deg); }
+.sawc-donut-chart circle { fill: none; }
+.sawc-donut-chart .donut-background { stroke: #e6e6e6; stroke-width: 8; }
+.sawc-donut-chart .donut-progress { stroke: #007cba; stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.5s ease-out, stroke 0.5s ease-out; }
+.sawc-donut-chart .donut-progress.is-complete { stroke: #46b450; }
+.sawc-donut-chart-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.sawc-chart-percent { font-size: 20px; font-weight: 600; color: #3c434a; }
+.sawc-chart-format { font-size: 14px; font-weight: bold; margin-top: 10px; }
+
+/* Buttons & Inputs */
+#sawc-bulk-start:disabled, #sawc-scan-start:disabled { background: #d6d6d6 !important; border-color: #c3c4c7 !important; color: #a0a5aa !important; cursor: not-allowed !important; }
+.settings-table td { padding: 15px 0; }
+.sawc-switch { position: relative; display: inline-block; width: 50px; height: 28px; vertical-align: middle; }
+.sawc-switch input { opacity: 0; width: 0; height: 0; }
+.sawc-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 28px; }
+.sawc-slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .sawc-slider { background-color: #3858e9; }
+input:checked + .sawc-slider:before { transform: translateX(22px); }
+.sawc-switch-label { vertical-align: middle; margin-left: 10px; }
+#sawc_quality_webp_number, #sawc_quality_avif_number { width: 60px; vertical-align: middle; margin-left: 10px; }
+#sawc_quality_webp_range, #sawc_quality_avif_range { vertical-align: middle; }
+
+
+/* Debug Log */
+.debug-log { background: #fafafa; border: 1px solid #e0e0e0; max-height: 200px; overflow-y: auto; padding: 10px; margin-top: 15px; font-family: monospace; font-size: 12px; }
