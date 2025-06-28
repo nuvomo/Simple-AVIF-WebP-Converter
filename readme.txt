@@ -3,7 +3,7 @@ Contributors: franklewandowski
 Tags: avif, webp, images, performance, optimization
 Requires at least: 5.8
 Tested up to: 6.8
-Stable tag: 4.7
+Stable tag: 4.9
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -46,6 +46,12 @@ The plugin is designed to work with any content that uses standard WordPress ima
 For WebP conversion, you need either the Imagick extension with WebP support or the GD extension with WebP support. For AVIF conversion (which offers the best compression), you need Imagick with AVIF support or GD with AVIF support (less common). The plugin's settings page includes a server status check to show you what is available.
 
 == Changelog ==
+
+= 4.9 =
+*   CRITICAL FIX: The plugin will now only generate `<source>` tags for image formats (AVIF, WebP) that physically exist on the server. This completely resolves 404 errors and broken images on servers that do not support a specific format (e.g., GD without AVIF support).
+
+= 4.8 =
+*   FIX: Resolved a critical issue where incomplete `srcset` attributes from themes caused images not to display. The plugin now forcefully rebuilds the full, correct `srcset` from WordPress metadata to ensure compatibility and correctness.
 
 = 4.7 =
 *   FIX: Improved compatibility with themes that use advanced lazy-loading (e.g., DesignExo). The plugin now correctly detects and handles `data-srcset` and other lazy-load attributes to prevent images from disappearing.

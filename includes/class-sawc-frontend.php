@@ -16,87 +16,96 @@ class SAWC_Frontend {
             $attachment_id = (int) $matches[1];
             $image_meta    = wp_get_attachment_metadata($attachment_id);
 
-            if (!$image_meta) {
+            if (!$image_meta || !isset($image_meta['file'])) {
                 return $img_tag;
             }
 
-            // --- Lazy Load Detection & Handling ---
-            $is_lazy_loaded = preg_match('/data-srcs?et=/', $img_tag);
-            
-            // Extract attributes from the original tag
-            preg_match('/src="([^"]+)"/i', $img_tag, $src_matches);
-            $original_src = $src_matches[1] ?? '';
+            // --- Phase 1: Pfade und URLs vorbereiten ---
+            $upload_dir    = wp_upload_dir();
+            $base_dir      = $upload_dir['basedir'];
+            $base_url      = $upload_dir['baseurl'];
+            if (is_ssl()) {
+                $base_url = str_replace('http://', 'https://', $base_url);
+            }
 
-            preg_match('/srcset="([^"]+)"/i', $img_tag, $srcset_matches);
-            $original_srcset = $srcset_matches[1] ?? '';
+            $image_dir     = dirname($image_meta['file']);
+            $image_dir_url = ('.' === $image_dir) ? '' : $image_dir . '/';
+            $image_dir_path = ('.' === $image_dir) ? '' : $image_dir . '/';
 
-            preg_match('/data-src="([^"]+)"/i', $img_tag, $data_src_matches);
-            $data_src = $data_src_matches[1] ?? '';
+            // --- Phase 2: Srcsets generieren UND auf Existenz prüfen ---
+            $avif_srcset     = '';
+            $webp_srcset     = '';
+            $jpeg_png_srcset = '';
 
-            preg_match('/data-srcset="([^"]+)"/i', $img_tag, $data_srcset_matches);
-            $data_srcset = $data_srcset_matches[1] ?? '';
+            // Sammle alle verfügbaren Bildgrößen
+            $all_sizes = $image_meta['sizes'] ?? [];
+            $all_sizes['full'] = [
+                'file'   => basename($image_meta['file']),
+                'width'  => $image_meta['width'],
+                'height' => $image_meta['height'],
+            ];
 
+            foreach ($all_sizes as $size_data) {
+                if (!isset($size_data['file'], $size_data['width'])) {
+                    continue;
+                }
+
+                $original_filename = $size_data['file'];
+                $base_filename     = pathinfo($original_filename, PATHINFO_FILENAME);
+                
+                $original_path = $base_dir . '/' . $image_dir_path . $original_filename;
+                $avif_path     = $base_dir . '/' . $image_dir_path . $base_filename . '.avif';
+                $webp_path     = $base_dir . '/' . $image_dir_path . $base_filename . '.webp';
+
+                $original_url = $base_url . '/' . $image_dir_url . $original_filename;
+                $avif_url     = $base_url . '/' . $image_dir_url . $base_filename . '.avif';
+                $webp_url     = $base_url . '/' . $image_dir_url . $base_filename . '.webp';
+                
+                $image_width = $size_data['width'];
+
+                // Füge nur Quellen hinzu, deren Datei tatsächlich existiert!
+                if (file_exists($avif_path)) {
+                    $avif_srcset .= $avif_url . ' ' . $image_width . 'w, ';
+                }
+                if (file_exists($webp_path)) {
+                    $webp_srcset .= $webp_url . ' ' . $image_width . 'w, ';
+                }
+                if (file_exists($original_path)) {
+                    $jpeg_png_srcset .= $original_url . ' ' . $image_width . 'w, ';
+                }
+            }
+
+            // Entferne das letzte Komma und Leerzeichen
+            $avif_srcset     = rtrim($avif_srcset, ', ');
+            $webp_srcset     = rtrim($webp_srcset, ', ');
+            $jpeg_png_srcset = rtrim($jpeg_png_srcset, ', ');
+
+            // Wenn keine einzige konvertierte Version existiert, gib das Originalbild zurück und beende
+            if (empty($avif_srcset) && empty($webp_srcset)) {
+                return $img_tag;
+            }
+
+            // --- Phase 3: Baue das <picture>-Element ---
+            $is_lazy_loaded = preg_match('/data-srcs?et=|lazyload/i', $img_tag);
             preg_match('/sizes="([^"]+)"/i', $img_tag, $sizes_matches);
             $sizes = $sizes_matches[1] ?? '';
             
-            // Decide which srcset to use as the base for our conversion
-            $base_srcset = $data_srcset ?: $original_srcset;
-            $base_src = $data_src ?: $original_src;
-
-            // If we have no srcset, we need to build it from scratch
-            if (empty($base_srcset)) {
-                $upload_dir = wp_upload_dir();
-                $base_url   = $upload_dir['baseurl'];
-                if (is_ssl()) {
-                    $base_url = str_replace('http://', 'https://', $base_url);
-                }
-
-                $image_dir       = dirname($image_meta['file']);
-                $image_dir_url   = ('.' === $image_dir) ? '' : $image_dir . '/';
-                
-                $generated_srcset = '';
-                if (isset($image_meta['sizes']) && is_array($image_meta['sizes'])) {
-                    foreach ($image_meta['sizes'] as $size_data) {
-                        $image_url = $base_url . '/' . $image_dir_url . $size_data['file'];
-                        $image_width = $size_data['width'];
-                        $generated_srcset .= $image_url . ' ' . $image_width . 'w, ';
-                    }
-                }
-                $full_image_url = $base_url . '/' . $image_meta['file'];
-                $full_image_width = $image_meta['width'];
-                $generated_srcset .= $full_image_url . ' ' . $full_image_width . 'w';
-                
-                $base_srcset = rtrim($generated_srcset, ', ');
-            }
-
-            if (empty($base_srcset)) {
-                return $img_tag; // Cannot proceed if no srcset is found or generated
-            }
-
-            // Create AVIF and WebP sources from the base srcset
-            $avif_srcset = preg_replace('/\.(jpg|jpeg|png)/i', '.avif', $base_srcset);
-            $webp_srcset = preg_replace('/\.(jpg|jpeg|png)/i', '.webp', $base_srcset);
-            
-            // Build the <picture> tag
             $picture_tag = '<picture>';
+            $source_srcset_attr = $is_lazy_loaded ? 'data-srcset' : 'srcset';
 
-            // For lazy loaded images, the <source> tags also need the data-srcset attribute
-            if ($is_lazy_loaded) {
-                $picture_tag .= '<source type="image/avif" data-srcset="' . esc_attr($avif_srcset) . '"' . ($sizes ? ' sizes="' . esc_attr($sizes) . '"' : '') . '>';
-                $picture_tag .= '<source type="image/webp" data-srcset="' . esc_attr($webp_srcset) . '"' . ($sizes ? ' sizes="' . esc_attr($sizes) . '"' : '') . '>';
-            } else {
-                $picture_tag .= '<source type="image/avif" srcset="' . esc_attr($avif_srcset) . '"' . ($sizes ? ' sizes="' . esc_attr($sizes) . '"' : '') . '>';
-                $picture_tag .= '<source type="image/webp" srcset="' . esc_attr($webp_srcset) . '"' . ($sizes ? ' sizes="' . esc_attr($sizes) . '"' : '') . '>';
+            if (!empty($avif_srcset)) {
+                $picture_tag .= '<source type="image/avif" ' . $source_srcset_attr . '="' . esc_attr($avif_srcset) . '"' . ($sizes ? ' sizes="' . esc_attr($sizes) . '"' : '') . '>';
             }
-
-            // Modify the original <img> tag to be a proper fallback.
-            // We ensure it has the original srcset so lazy loading scripts can use it if they need to.
-            $fallback_img = $img_tag;
+            if (!empty($webp_srcset)) {
+                $picture_tag .= '<source type="image/webp" ' . $source_srcset_attr . '="' . esc_attr($webp_srcset) . '"' . ($sizes ? ' sizes="' . esc_attr($sizes) . '"' : '') . '>';
+            }
             
-            // If the original tag didn't have a srcset, add ours.
-            if (empty($original_srcset) && !empty($base_srcset)) {
-                 $attribute_to_add = $is_lazy_loaded ? ' data-srcset="' . esc_attr($base_srcset) . '"' : ' srcset="' . esc_attr($base_srcset) . '"';
-                 $fallback_img = str_replace('<img ', '<img ' . $attribute_to_add . ' ', $fallback_img);
+            // Verwende das Original-<img>-Tag als Fallback, da es alle wichtigen Klassen und Attribute enthält
+            $fallback_img = $img_tag;
+            // Wenn der Fallback kein srcset hat, füge unser korrektes hinzu
+            if (!preg_match('/srcset/i', $fallback_img) && !empty($jpeg_png_srcset)) {
+                $img_srcset_attr = $is_lazy_loaded ? 'data-srcset' : 'srcset';
+                $fallback_img = str_replace('<img ', '<img ' . $img_srcset_attr . '="' . esc_attr($jpeg_png_srcset) . '" ', $fallback_img);
             }
             
             $picture_tag .= $fallback_img . '</picture>';
