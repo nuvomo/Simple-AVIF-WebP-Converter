@@ -3,7 +3,7 @@
  * Plugin Name:       Simple AVIF & WebP Converter
  * Plugin URI:        https://nuvomo.de/simple-avif-webp-converter
  * Description:       Konvertiert hochgeladene Bilder in AVIF und WebP und liefert sie mit einem Picture-Tag aus. Unterstützt Imagick und GD.
- * Version:           4.6
+ * Version:           4.7
  * Author:            nuvomo.de {we.love.plugins}
  * Author URI:        https://nuvomo.de
  * License:           GPL v2 or later
