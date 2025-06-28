@@ -1,11 +1,11 @@
-# Simple-AVIF-WebP-Converter
+# Simple AVIF & WebP Converter
 
 === Simple AVIF & WebP Converter ===
 Contributors: franklewandowski
 Tags: avif, webp, images, performance, optimization
 Requires at least: 5.8
 Tested up to: 6.8
-Stable tag: 4.6
+Stable tag: 4.9
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -16,11 +16,14 @@ A simple yet powerful plugin to automatically convert uploaded images to AVIF an
 
 Simple AVIF & WebP Converter seamlessly integrates into your WordPress media workflow. It automatically converts JPEG and PNG images to the highly efficient AVIF and WebP formats upon upload. On the frontend, it intelligently replaces standard `<img>` tags with responsive `<picture>` elements, allowing browsers to choose the best format. This can significantly reduce page load times and improve your site's performance scores.
 
+This plugin is designed to be compatible with modern themes and lazy-loading mechanisms.
+
 = Features =
 
 *   **Automatic Conversion:** Converts new image uploads to both AVIF and WebP.
 *   **Bulk Converter:** Process your entire existing media library with a user-friendly batch processor.
 *   **<picture> Tag Implementation:** Serves images via the `<picture>` tag for optimal browser compatibility.
+*   **Lazy-Load Compatible:** Detects and integrates with theme and plugin-based lazy-loading for seamless operation.
 *   **Flexible Engine:** Supports both Imagick and GD libraries, with automatic detection of server capabilities.
 *   **Quality Control:** Set custom quality levels for both AVIF and WebP conversions.
 *   **Clean Uninstallation:** Deletes converted image files when an original is removed from the media library.
@@ -36,15 +39,24 @@ Simple AVIF & WebP Converter seamlessly integrates into your WordPress media wor
 
 == Frequently Asked Questions ==
 
-= Does this work with my page builder? =
+= Does this work with my page builder or theme? =
 
-The plugin is designed to work with any content that uses standard WordPress image classes (e.g., `wp-image-123`). This covers the vast majority of themes and page builders.
+The plugin is designed to work with any content that uses standard WordPress image classes (e.g., `wp-image-123`). It also includes compatibility logic for most common lazy-loading scripts used by modern themes and page builders.
 
 = What are the server requirements? =
 
 For WebP conversion, you need either the Imagick extension with WebP support or the GD extension with WebP support. For AVIF conversion (which offers the best compression), you need Imagick with AVIF support or GD with AVIF support (less common). The plugin's settings page includes a server status check to show you what is available.
 
 == Changelog ==
+
+= 4.9 =
+*   CRITICAL FIX: The plugin will now only generate `<source>` tags for image formats (AVIF, WebP) that physically exist on the server. This completely resolves 404 errors and broken images on servers that do not support a specific format (e.g., GD without AVIF support).
+
+= 4.8 =
+*   FIX: Resolved a critical issue where incomplete `srcset` attributes from themes caused images not to display. The plugin now forcefully rebuilds the full, correct `srcset` from WordPress metadata to ensure compatibility and correctness.
+
+= 4.7 =
+*   FIX: Improved compatibility with themes that use advanced lazy-loading (e.g., DesignExo). The plugin now correctly detects and handles `data-srcset` and other lazy-load attributes to prevent images from disappearing.
 
 = 4.6 =
 *   FIX: Updated "Tested up to" version to be compliant with WordPress 6.5.
@@ -66,5 +78,5 @@ For WebP conversion, you need either the Imagick extension with WebP support or 
 
 == Upgrade Notice ==
 
-= 4.6 =
-This version includes updates for WordPress 6.5 compatibility and addresses several coding standard warnings. Updating is recommended.
+= 4.7 =
+This version includes a critical fix for compatibility with modern themes using lazy-loading. If you have experienced issues with images not displaying, this update is highly recommended.
